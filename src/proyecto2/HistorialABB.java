@@ -2,11 +2,13 @@ package proyecto2;
 
 public class HistorialABB {
     private Habitacion root = null;
+    private Habitacion HabitacionEncontrada = null;
     
     public class Habitacion {
         int num_hab;
         String tipo_hab;
         String piso;
+        Boolean disponible;
         Lista<Cliente> historico = new Lista<>();
         
         Habitacion left = null;
@@ -16,6 +18,7 @@ public class HistorialABB {
             this.num_hab = num_hab;  
             this.tipo_hab = tipo_hab;
             this.piso = piso;
+            this.disponible = true;
         }
     }
     
@@ -77,5 +80,35 @@ public class HistorialABB {
         }
         
         return historial;
+    }
+    
+    public void ocuparHabitacion(int num_hab){
+        Habitacion h = obtenerHabitacion(num_hab);
+        h.disponible = false;
+    }
+    
+    public void liberarHabitacion(int num_hab){
+        Habitacion h = obtenerHabitacion(num_hab);
+        h.disponible = true;
+    }
+    
+    public int obtenerHabitacionLibre(String tipo_hab){
+        this.HabitacionEncontrada = null;
+        buscarTipoHab(root, tipo_hab);
+        if(HabitacionEncontrada!= null){
+            return HabitacionEncontrada.num_hab;
+        }
+        return -1;
+    }
+    
+    public void buscarTipoHab(Habitacion actual, String tipo_hab) {
+        if (actual != null) {
+            if(actual.tipo_hab.equals(tipo_hab) && actual.disponible){
+                HabitacionEncontrada = actual;
+                return;
+            }
+            buscarTipoHab(actual.left,tipo_hab);
+            buscarTipoHab(actual.right, tipo_hab);
+        }
     }
 }
